@@ -52,7 +52,7 @@ pokemontbl={"Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Cha
 			"Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", 							--  12	
 			"Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate",			--  20
 			"Spearow", "Fearow", "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash",				--  28
-			"NidoranF", "Nidorina", "Nidoqueen", "NidoranM", "Nidorino", "Nidoking",							--  34
+			"Nidoran♀", "Nidorina", "Nidoqueen", "Nidoran♂", "Nidorino", "Nidoking",							--  34
 			"Clefairy", "Clefable", "Vulpix", "Ninetales", "Jigglypuff", "Wigglytuff",							--  40
 			"Zubat", "Golbat", "Oddish", "Gloom", "Vileplume", "Paras", "Parasect", "Venonat", "Venomoth",		--  49
 			"Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck", "Golduck", "Mankey", "Primeape",				--  57
