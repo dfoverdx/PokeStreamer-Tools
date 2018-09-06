@@ -10,8 +10,8 @@ GOTO :eof
 :getarch
 file "%*" | findstr 80386 > NUL
 IF %errorlevel%==0 (
-    ECHO %1	32-bit
+    ECHO %*	32-bit
 ) ELSE (
-    ECHO %1	64-bit
+    ECHO %*	64-bit
 )
 GOTO :eof
