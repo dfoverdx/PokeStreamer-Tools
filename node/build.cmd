@@ -39,6 +39,6 @@ ECHO Building...
 CALL npm run build
 IF %errorlevel% NEQ 0 (
     ECHO [31mBuild failed.[0m
-    ECHO Run [32mnpm --install[0m if you have not already.  Otherwise, may the force be with you in your troubleshooting!
+    ECHO Run [32mnpm install[0m if you have not already.  Otherwise, may the force be with you in your troubleshooting!
     EXIT /B 1
 )
