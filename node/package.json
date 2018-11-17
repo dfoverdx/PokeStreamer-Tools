@@ -39,6 +39,7 @@
     "discord.js": "^11.3.2",
     "ejs-loader": "^0.3.1",
     "esm": "^3.0.17",
+    "event-source-polyfill": "^1.0.4",
     "express": "^4.16.2",
     "express-ws": "^3.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",

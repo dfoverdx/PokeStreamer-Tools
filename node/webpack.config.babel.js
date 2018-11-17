@@ -156,7 +156,10 @@ function genConfig(env, options) {
         new webpack.ProvidePlugin({
             _: 'lodash',
         }),
-        new CopyWebpackPlugin([{ from: './resources/*.png', flatten: true }]),
+        new CopyWebpackPlugin([
+            { from: './resources/*.png', flatten: true },
+            { from: './resources/*.js', flatten: true },
+        ]),
         new ExtractTextPlugin({ 
             filename: '[name].css',
         }),
