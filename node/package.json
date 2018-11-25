@@ -1,6 +1,6 @@
 {
   "name": "pokemon-server",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Node server that hosts Pokemon images and handles Nuzlocke and SoulLink for streaming",
   "main": "server/index.js",
   "scripts": {

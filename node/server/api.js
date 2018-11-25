@@ -344,7 +344,7 @@ function sendSlots(slotsToSend) {
         if (conn.slot === 'all') {
             conn.res.sseSend(slotsToSend);
         } else {
-            conn.res.send(PM.slots[conn.slot]);
+            conn.res.sseSend(PM.slots[conn.slot]);
         }
     }
 }
