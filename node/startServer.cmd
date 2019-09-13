@@ -11,11 +11,14 @@ IF %errorlevel% NEQ 0 (
 )
 
 FOR /F "tokens=1-3 delims=v. USEBACKQ" %%F IN (`node --version`) DO (
-    IF %%F LSS 8 (
+    SET /a X=%%F
+    SET /a Y=%%G
+    SET /a Z=%%H
+    IF !X! LSS 8 (
         SET warn=v%%F.%%G.%%H
-    ) ELSE IF %%G LSS 9 (
+    ) ELSE IF !X! EQU 8 IF !Y! LSS 9 (
         SET warn=v%%F.%%G.%%H
-    ) ELSE IF %%H LSS 4 (
+    ) ELSE IF !X! EQU 8 IF !Y! EQU 9 IF !Z! LSS 4 (
         SET warn=v%%F.%%G.%%H
     )
 )
