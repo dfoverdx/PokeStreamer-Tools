@@ -2,18 +2,9 @@
 -- Modified by EverOddish for automatic image updates
 -- Modified by dfoverdx for using a NodeJS server for automatic image updates
 
---for different game versions
---1: Ruby/Sapphire U
---2: Emerald U
---3: FireRed/LeafGreen U
---4: Ruby/Sapphire J
---5: Emerald J (TODO)
---6: FireRed/LeafGreen J (1360)
-
---for subgame
---0: Ruby/FireRed, Emerald
---1: Sapphire/LeafGreen
 local gv = require("game_version")
+
+-- don't edit these values
 local game = gv[1]
 local subgame= gv[2]
 local startvalue=0x83ED --insert the first value of RNG
@@ -30,7 +21,7 @@ local gen = 3
 -- Key names are case sensitive.
 local key={"9", "8", "7"}
 
--- NOTE: if pokemon genders are not being correctly determined, search this file for "local baseStats" and follow the 
+-- NOTE: if pokemon genders are not being correctly determined, search this file for "local baseStats" and follow the
 --       directions in the comment there.
 
 -- It is not necessary to change anything beyond this point.
@@ -48,7 +39,7 @@ local yfix=65 --y position of display handle
 local xfix2=105 --x position of 2nd handle
 local yfix2=0 --y position of 2nd handle
 
-local k 
+local k
 
 dofile "send_data_to_server.lua"
 
@@ -71,15 +62,15 @@ local estats={0x030045C0, 0x02024744, 0x0202402C, 0x030044F0, 0x00000000, 0x0202
 local rng   ={0x03004818, 0x03005D80, 0x03005000, 0x03004748, 0x00000000, 0x03005040} --0X03004FA0
 local rng2  ={0x00000000, 0x00000000, 0x020386D0, 0x00000000, 0x00000000, 0x0203861C}
 
--- IMPORTANT: These values may be wrong.  I pulled them from 
+-- IMPORTANT: These values may be wrong.  I pulled them from
 --            https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_base_stats_data_structure_in_Generation_III but
---            found that at least the US FireRed version had the wrong value.  I manually searched for the correct 
---            address, but I don't know about the rest of the versions, and am uninspired to search for the ROMs to 
---            correct them. FR(U) is correct.  If the gender of Pokemon is not being calculated properly, run 
+--            found that at least the US FireRed version had the wrong value.  I manually searched for the correct
+--            address, but I don't know about the rest of the versions, and am uninspired to search for the ROMs to
+--            correct them. FR(U) is correct.  If the gender of Pokemon is not being calculated properly, run
 --            find_bulbasaur_gen3.lua after loading the ROM and update these values manually.
 --
 --            If you do this and want to help out future streamers, send me the value you discovered and the version
---            of the game you are running in the dxdt#pokemon-streamer-tools Discord channel 
+--            of the game you are running in the dxdt#pokemon-streamer-tools Discord channel
 --            (https://discord.gg/FKDntWR), and I will add it to the github repo
 --
 -- baseStats={Ruby U, Emerald U, FireRed U, Ruby J, Emerald J, FireRed J}
@@ -88,7 +79,7 @@ if subgame == 1 then
     -- Ruby to Sapphire
     baseStats[1] = 0x081FEBC4 -- Saphire U
     baseStats[4] = 0x081FEBC4 -- Saphire J
-    
+
     -- FireRed to LeafGreen
     baseStats[3] = 0x0825477C -- LeafGreen U
     baseStats[6] = 0x08211184 -- LeafGreen J
@@ -167,10 +158,10 @@ function get_is_female(species, val)
         local genderIdx = speciesIdx + 16
         local bulbasaurAddr = baseStats[game] - 28
         local genderThreshold = mbyte(bulbasaurAddr + genderIdx)
-        
+
         -- print(string.format("%02x", val))
-        
-        if genderThreshold == 0 or genderThreshold == 255 then 
+
+        if genderThreshold == 0 or genderThreshold == 255 then
             -- all male or genderless
             return false
         elseif val == 254 then
@@ -186,34 +177,34 @@ end
 --that's why the previous input is used as well
 prev=input.get()
 function fn()
-    
+
     tabl=input.get()
-    
+
     if tabl["Q"] and not prev["Q"] then
         print_ivs = 1
     end
     --*********
     current_time = os.time()
     if current_time - last_check > 1 then
-        
+
         local slot_changes = {}
 
         -- now for display
         if status==1 or status==2 then --status 1 or 2
-            
+
             if print_ivs == 1 then
                 print("")
             end
-            
+
             party = {}
-            
+
             for slot = 1, 6 do
                 if status==1 then
                     start=pstats[game]+100*(slot-1)
                 else
                     start=estats[game]+100*(substatus[2]-1)
                 end
-                
+
                 personality=mdword(start)
                 trainerid=mdword(start+4)
                 otid = mword(start+4)
@@ -222,16 +213,16 @@ function fn()
                 is_shiny = bxr(otid, otsid, getbits(personality, 0, 16), getbits(personality, 16, 16)) < 8
 
                 magicword=bxr(personality, trainerid)
-                
+
                 i=personality%24
-                
+
                 nicknameoffset=8
                 nicknamelength=10
                 growthoffset=(growthtbl[i+1]-1)*12
                 attackoffset=(attacktbl[i+1]-1)*12
                 effortoffset=(efforttbl[i+1]-1)*12
                 miscoffset=(misctbl[i+1]-1)*12
-                
+
                 nicknamebytes=memory.readbyterange(start+nicknameoffset,nicknamelength)
                 nickname=""
                 num_nil_characters = 0
@@ -246,45 +237,45 @@ function fn()
                         nickname = nickname .. characterTable[nicknamebytes[j]]
                     end
                 end
-                
+
                 growth1=bxr(mdword(start+32+growthoffset),magicword)
                 growth2=bxr(mdword(start+32+growthoffset+4),magicword)
                 growth3=bxr(mdword(start+32+growthoffset+8),magicword)
-                
+
                 attack1=bxr(mdword(start+32+attackoffset),magicword)
                 attack2=bxr(mdword(start+32+attackoffset+4),magicword)
                 attack3=bxr(mdword(start+32+attackoffset+8),magicword)
-                
+
                 effort1=bxr(mdword(start+32+effortoffset),magicword)
                 effort2=bxr(mdword(start+32+effortoffset+4),magicword)
                 effort3=bxr(mdword(start+32+effortoffset+8),magicword)
-                
+
                 misc1=bxr(mdword(start+32+miscoffset),magicword)
                 misc2=bxr(mdword(start+32+miscoffset+4),magicword)
                 misc3=bxr(mdword(start+32+miscoffset+8),magicword)
-                
+
                 location_met=getbits(misc1,8,8)
                 level_met=getbits(misc1,16,6)
-                
+
                 cs=ah(growth1)+ah(growth2)+ah(growth3)+ah(attack1)+ah(attack2)+ah(attack3)
                 +ah(effort1)+ah(effort2)+ah(effort3)+ah(misc1)+ah(misc2)+ah(misc3)
-                
+
                 cs=cs%65536
-                
+
                 species=getbits(growth1,0,16)
                 -- print(string.format("0x%08x", personality))
                 --is_female=get_is_female(species, personality % 256)
-                
+
                 holditem=getbits(growth1,16,16)
 
                 experience = growth2
                 pokerus=getbits(misc1,0,8)
-                
+
                 ivs=misc2
-                
+
                 evs1=effort1
                 evs2=effort2
-                
+
                 hpiv=getbits(ivs,0,5)
                 atkiv=getbits(ivs,5,5)
                 defiv=getbits(ivs,10,5)
@@ -292,21 +283,21 @@ function fn()
                 spatkiv=getbits(ivs,20,5)
                 spdefiv=getbits(ivs,25,5)
                 is_egg=getbits(ivs,30,1)
-                
+
                 hpev=getbits(evs1, 0, 8)
                 atkev=getbits(evs1, 8, 8)
                 defev=getbits(evs1, 16, 8)
                 spdev=getbits(evs1, 24, 8)
                 spatkev=getbits(evs2, 0, 8)
                 spdefev=getbits(evs2, 8, 8)
-                
+
                 nature=personality%25
                 natinc=math.floor(nature/5)
                 natdec=nature%5
-                
+
                 hidpowtype=math.floor(((hpiv%2 + 2*(atkiv%2) + 4*(defiv%2) + 8*(spdiv%2) + 16*(spatkiv%2) + 32*(spdefiv%2))*15)/63)
                 hidpowbase=math.floor((( getbits(hpiv,1,1) + 2*getbits(atkiv,1,1) + 4*getbits(defiv,1,1) + 8*getbits(spdiv,1,1) + 16*getbits(spatkiv,1,1) + 32*getbits(spdefiv,1,1))*40)/63 + 30)
-                
+
                 move1=getbits(attack1,0,16)
                 move2=getbits(attack1,16,16)
                 move3=getbits(attack2,0,16)
@@ -315,7 +306,7 @@ function fn()
                 pp2=getbits(attack3,8,8)
                 pp3=getbits(attack3,16,8)
                 pp4=getbits(attack3,24,8)
-                
+
                 movename1=movetbl[move1]
                 if movename1==nil then movename1="none" end
                 movename2=movetbl[move2]
@@ -324,12 +315,12 @@ function fn()
                 if movename3==nil then movename3="none" end
                 movename4=movetbl[move4]
                 if movename4==nil then movename4="none" end
-                
+
                 speciesname=pokemontbl[species]
                 if speciesname==nil then speciesname="none" end
-                
+
                 level=mbyte(start+84)
-                
+
                 if "none" ~= speciesname then
                     party_member = {
                         gen = 3
@@ -340,7 +331,7 @@ function fn()
                     party_member["level_met"] = level_met
                     --party_member["item"] = holditem
                     party_member["item"] = "none"
-                    --party_member["ability"] = abilities[ability + 1] 
+                    --party_member["ability"] = abilities[ability + 1]
                     party_member["ability"] = "--"
                     party_member["nature"] = naturename[nature+1]
                     party_member["experience"] = experience
@@ -353,15 +344,15 @@ function fn()
                     party_member["move2"] = movename2
                     party_member["move3"] = movename3
                     party_member["move4"] = movename4
-                    
+
                     party[slot] = party_member
                 end
-                
+
                 current_hp=mword(start+86)
                 max_hp=mword(start+88)
-                
+
                 local last_state = last_party[slot]
-                
+
                 local current_state = Pokemon{
                     gen = 3,
                     pid = personality,
@@ -378,12 +369,12 @@ function fn()
                     location_met = location_met,
                     level_met = level_met
                 }
-                
+
                 local change = current_state ~= last_state
-                
+
                 if change then
                     print("Slot " .. slot .. " -> " .. tostring(current_state))
-                    
+
                     if speciesname ~= "none" then
                         if species > 411 then
                             -- unown variations
@@ -394,7 +385,7 @@ function fn()
                     else
                         current_state.species = -1
                     end
-                    
+
                     local pokemon
                     if current_state.pid ~= 0 then
                         pokemon = current_state
@@ -404,19 +395,19 @@ function fn()
                     slot_changes[#slot_changes + 1] = { slot_id = slot, pokemon = pokemon }
                     last_party[slot] = current_state
                 end
-                
+
                 if print_ivs == 1 then
                     if speciesname ~= "none" then
                         evsum = hpev + atkev + defev + spatkev + spdefev + spdev
-                        print("Pokemon: " .. speciesname .. " IV(" .. hpiv .. "/" .. atkiv .. "/" .. defiv .. "/" .. spatkiv .. "/" 
-                        .. spdefiv .. "/" .. spdiv .. ") EV(" .. hpev .. "/" .. atkev .. "/" .. defev .. "/" .. spatkev .. "/" 
+                        print("Pokemon: " .. speciesname .. " IV(" .. hpiv .. "/" .. atkiv .. "/" .. defiv .. "/" .. spatkiv .. "/"
+                        .. spdefiv .. "/" .. spdiv .. ") EV(" .. hpev .. "/" .. atkev .. "/" .. defev .. "/" .. spatkev .. "/"
                         .. spdefev .. "/" .. spdev .. ") " .. evsum .. "/508")
                     end
                 end
-                
+
                 --print("slot " .. slot .. " " .. speciesname)
             end -- for loop slots
-            
+
             if #slot_changes > 0 then
                 send_slots(slot_changes, gen, game, subgame)
             end
@@ -427,8 +418,8 @@ function fn()
             end
             print_ivs = 0
         end --status 1 or 2
-        
-        
+
+
     end
 end
 
