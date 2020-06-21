@@ -125,12 +125,13 @@ $vShift: $imageShift / $imageWrapperRatio;
 }
 
 %thumbnail-base {
-  .image-wrapper {
+  .img-wrapper {
     &:last-child {
-      transform: scale(.5 .5);
+      transform: scale(.5, .5);
       transform-origin: 100% 100%;
       
       @include overlay(bottom, left);
+      top: -$imageWrapperHeight !important;
     }
   }
 }
@@ -158,11 +159,11 @@ $vShift: $imageShift / $imageWrapperRatio;
   }
   
   .soul-link {
-    @if $soulLinkOrientation != "custom" and $soulLinkOrientation != "thumbnail" {
-      @include soul-link-styles($soulLinkOrientation);
-    } @else if $soulLinkOrientation == "thumbnail" {
+    @if $soulLinkOrientation == "thumbnail" {
       @extend %thumbnail-base;
       @extend %thumbnail !optional;
+    } @else if $soulLinkOrientation != "custom" {
+      @include soul-link-styles($soulLinkOrientation);
     }
   }
   
