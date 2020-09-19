@@ -1,7 +1,7 @@
 <img class="icon partner-pokemon" />
 <select class="form-control-sm select-partner-pokemon">
     <option value="-1" disabled>no available links</option>
-    <% for (let pokemon of Object.values(unlinkedPartnerPokemon)) { %>
+    <% for (const pokemon of Object.values(unlinkedPartnerPokemon)) { %>
         <%= require('./pokemon-dropdown-option.ejs')({ Icons, Pokedex, pokemon }) %>
     <% } %>
 </select>

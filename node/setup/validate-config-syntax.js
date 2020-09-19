@@ -1,8 +1,4 @@
-import json5 from 'json5';
-import path from 'path';
-import fs from 'fs';
 import 'colors';
-
 import '../common/extensions/array';
 import compileConfig from '../common/configCompiler';
 
@@ -11,9 +7,9 @@ try {
     console.log(`All referenced config files have valid syntax.\n`.green);
     console.log(`Config files validated:`);
     console.log([
-        './config.json', 
-        ...Array.makeArray(config.configOverride), 
-        config.advancedConfig, 
+        './config.json',
+        ...Array.makeArray(config.configOverride),
+        config.advancedConfig,
         './common/config.empty.json'
     ].map(f => `• ${f.white}`.gray).join('\n'));
     process.exit(0);
