@@ -5,13 +5,13 @@ class PokemonIcons {
         let req = require.context('../pokemon-icons/regular', false, /\.png$/);
         req.keys().forEach(fn => {
             let species = /([-a-zA-Z0-9]+)\.png$/.exec(fn)[1];
-            this[species] = { regular: req(fn) };
+            this[species] = { regular: req(fn).default };
         });
-        
+
         req = require.context('../pokemon-icons/shiny', false, /\.png$/);
         req.keys().forEach(fn => {
             let species = /([-a-zA-Z0-9]+)\.png$/.exec(fn)[1];
-            this[species].shiny = req(fn);
+            this[species].shiny = req(fn).default;
         });
 
         let egg = require('../pokemon-icons/egg.png');
@@ -29,7 +29,7 @@ class PokemonIcons {
                 return this[file][pokemon.isShiny ? 'shiny' : 'regular'];
             }
         }
-        
+
         return this[Pokedex.FileNames[pokemon.species]][pokemon.isShiny ? 'shiny' : 'regular'];
     }
 }
