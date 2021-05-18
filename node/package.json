@@ -12,7 +12,7 @@
     "setup": "node -r esm setup/index.js",
     "test": "jest"
   },
-  "author": "Haley Hitch",
+  "author": "Bethany Hitch",
   "license": "ISC",
   "repository": {
     "type": "git",
