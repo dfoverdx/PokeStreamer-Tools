@@ -1,17 +1,10 @@
-import EventEmitter from 'events';
-import fs from 'fs';
-import path from 'path';
-import https from 'https';
 import Discord from 'discord.js';
-
-import { Paths } from '../constants';
-import Config from '../config';
-import CleanupProcess from '../cleanup-process';
-import Pokemon from '../pokemon/pokemon';
-import PM from '../pokemon/pokemon-manager';
-import SoulLink from './soullink';
-import { parseMessage, MessageFile } from './message';
+import EventEmitter from 'events';
 import { TimeoutError } from '../../common/error';
+import CleanupProcess from '../cleanup-process';
+import Config from '../config';
+import { parseMessage } from './message';
+import SoulLink from './soullink';
 
 const MAX_MESSAGE_LENGTH = 2000;
 
@@ -42,8 +35,8 @@ class DiscordClient extends EventEmitter {
             return;
         }
 
-        if (this._client && 
-            this._client.ws.connection !== null && 
+        if (this._client &&
+            this._client.ws.connection !== null &&
             this._client.status !== Discord.Constants.Status.DISCONNECTED) {
             console.warn('Discord client is already initialized.  Skipping.');
             return;
@@ -57,7 +50,7 @@ class DiscordClient extends EventEmitter {
 
         try {
             await this._client.login(discordConfig.botToken);
-            
+
             if (!c.user.bot) {
                 console.error(`Discord user ${c.user.tag} is not a bot!  If Discord catches you doing this, your account may be terminated.  You have been warned.`);
             } else {
@@ -74,7 +67,7 @@ class DiscordClient extends EventEmitter {
                 throw new Error(`Invalid channel specified in config.json: ${cc}.  Channel must be of the form 'your-discord-server#your-private-channel'.`);
             }
 
-            let [ _, g, ch ] = match;
+            let [ , g, ch ] = match;
 
             let guild = c.guilds.find('name', g);
             if (!guild) {
@@ -163,7 +156,7 @@ class DiscordClient extends EventEmitter {
 
     async waitForMessage(messageType, ttl = 3000) {
         return new Promise((resolve, reject) => {
-            this.matchOnce(messageType, msg => msg.messageType === messageType, resolve, ttl, 
+            this.matchOnce(messageType, msg => msg.messageType === messageType, resolve, ttl,
                 () => reject(new TimeoutError({ msg: `Waiting for message timed out after ${ttl / 1000} seconds`, ttl })));
         });
     }
@@ -179,7 +172,7 @@ class DiscordClient extends EventEmitter {
 
         let msg = this._messageQueue;
 
-        // empty the queue so that new messages may be added while we wait for a response from the client that our 
+        // empty the queue so that new messages may be added while we wait for a response from the client that our
         // message was sent
         // if the send fails, reinsert the failed message queue in front of the new messages
         this._messageQueue = [];
@@ -258,7 +251,7 @@ class DiscordClient extends EventEmitter {
         });
 
         c.on('message', this._handleMessage.bind(this));
-    
+
         c.on('reconnecting', () => {
             console.warn('Discord client lost connection.  Reconnecting...');
             this.emit('connection-status-change', 'reconnecting');
@@ -271,12 +264,12 @@ class DiscordClient extends EventEmitter {
                 }
             }, 5600); // use the time value used in Discord.JS's WebSocketConnection.reconnect() + 100ms
         });
-    
+
         c.on('disconnect', () => {
             console.debug('Discord Client disconnected');
             this.emit('connection-status-change', 'closed');
         });
-    
+
         c.on('error', err => {
             console.error(`ERROR in connection to Discord: ${err.message}`);
             clearTimeout(this._reconnectionTimeout);
@@ -305,7 +298,7 @@ class DiscordClient extends EventEmitter {
     }
 
     async _setPartnerBot() {
-        let discordConfig = Config.soulLink.linking.discord;        
+        let discordConfig = Config.soulLink.linking.discord;
         let match = /([^#]+)#(\d{4})/.exec(discordConfig.partnerBotTag);
         if (!match) {
             throw new Error(`ERROR: Invalid partnerBotTag in config: ${discordConfig.partnerBotTag}`);
